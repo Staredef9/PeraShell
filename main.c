@@ -55,16 +55,10 @@ int main(int argc, char **argv, char **envp)
 		else
 			printf("%s It is not a valid cmd\n", prova->segments->cmd);
 		free_cached_path(cached_path);
-
+		free(cmd_path);
+		free_commandInfo(prova);
 		}			
 
-
-		/*
-		 * TODO:
-		 * fork a child process 
-		 * child process invoca execvp()
-		 * parent invoca wait() a meno che il comando includa &
-		 * */
 	}
 		return 0;
 }

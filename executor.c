@@ -26,8 +26,8 @@ char *find_cmd_in_path(const char *command, char *cached_path)
 	char cmd_path[1024];
 
 	while(dir != NULL){
-		snprintf(cmd_path, sizeof(cmd_path), "%s/%s", dir, command);
-		printf("cmd path is: %s\n", cmd_path);
+		//snprintf(cmd_path, sizeof(cmd_path), "%s/%s", dir, command);
+		strcpy(cmd_path,dir);
 		if (access(cmd_path, X_OK) == 0){
 			free(path_copy);
 			printf("cmd path is: %s\n", cmd_path);
