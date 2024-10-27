@@ -1,2 +1,2 @@
 # PeraShell
-An exercise shell implementation 
+An exercise  for a shell implementation 
