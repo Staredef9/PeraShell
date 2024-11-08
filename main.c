@@ -49,7 +49,12 @@ int main(int argc, char **argv, char **envp)
 		print_cmd_info(prova);
 		
 		cached_path = init_cached_path(envp, cached_path);
+		
 		char *cmd_path = find_cmd_in_path(prova->segments->cmd, cached_path);
+		
+		//Buggerino over here ->se metto un non comando lo trova lo stesso.
+		
+		
 		if (cmd_path)
 			printf("cmd exists at path: %s\n", cmd_path);
 		else
