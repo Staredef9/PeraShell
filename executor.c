@@ -23,10 +23,30 @@ char *find_cmd_in_path(const char *command, char *cached_path)
 
 	char *path_copy =  strdup(cached_path);
 	char *dir = strtok(path_copy, ":");
-	char cmd_path[1024];
+	char *cmd_path = malloc(sizeof(char*) * 1024);
+    	
+	memset((cmd_path), '\0', 1024);
+	
+	while (dir != NULL) {
+        //strcpy(cmd_path, dir);
+        //strcat(cmd_path, "/");
+        //strcat(cmd_path, command);
+	snprintf(cmd_path, sizeof(cmd_path), "%s/%s", dir, command);
 
-	while(dir != NULL){
-		snprintf(cmd_path, sizeof(cmd_path), "%s/%s", dir, command);
+        printf("Checking path: %s\n", cmd_path);
+
+        if (access(cmd_path, X_OK) == 0) {
+            printf("Command found: %s\n", cmd_path);
+            free(path_copy);
+            char *to_return = strdup(cmd_path);
+	    free(cmd_path);
+	    return (to_return);
+        }
+
+        perror("access");
+        dir = strtok(NULL, ":");
+    }
+/*	while(dir != NULL){
 		
 		//strcpy(cmd_path, dir);
 		printf("Checking path: %s\n", cmd_path);	
@@ -39,7 +59,7 @@ char *find_cmd_in_path(const char *command, char *cached_path)
 			//printf("access not working\n");
 		}
 		dir = strtok(NULL, ":");
-	}
+	}*/
 	free(path_copy);
 	printf("cmd not found\n");
 	return NULL;

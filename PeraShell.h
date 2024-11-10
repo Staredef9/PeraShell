@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
+#include <sys/stat.h>
 #define MAX_LINE 80
 #define BUFFER 1000
 #define MAX_ARGS 100

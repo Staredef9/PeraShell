@@ -1,15 +1,19 @@
 #include "PeraShell.h"
 
 
-
 //copia envp come una matrice di righe
 //usa la formula di PIPE della 42 per cercare 
 //dove sono i comandi nelle variabii di ambiente
 //e passali alle funzioni di esecuzione.
 //
 
+struct stat statbuf;
+
 int main(int argc, char **argv, char **envp)
 {
+	if (stat("/usr/bin", &statbuf) != 0){
+		printf("/usr/bin does not exist\n");
+	}
 	char *args[MAX_LINE/2 + 1];
 	int should_run = 1;
 	
