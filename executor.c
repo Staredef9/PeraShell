@@ -12,28 +12,50 @@ char	*my_getenv(const char *name, char **envp)
 	return NULL;
 }
 
-//scrivere anche una che splitta la variabile path in base ai : e cerca le singole director
+///////LE COSE CHE NON VANNO:
+///SIZE TOBE DA METTERE UNA FLAG ANCHE PER LE OPZIONI 
+///VANNO IMPLEMENTATI BENE I BUILTIN
+///DEVO IMPLMENTARE LE STRUCT DI MODO CHE FUNZIONINO DA PASSARE A EXECVE PER BENE
+///DEVO IMPLEMENTARE LA LOGICA DELLE PIPE MULTIPLE
+///DEVO IMPLEMEMTARE LA PULIZIA GENERALE``
 
-char *find_cmd_in_path(const char *command, char *cached_path)
+
+
+
+char *find_cmd_in_path(const char *command, char *cached_path, int numArguments)
 {
 	if (!cached_path){
 		printf("there is no cached path\n");
 		return NULL;
 	}
 
-	char *path_copy =  strdup(cached_path);
-	char *dir = strtok(path_copy, ":");
-	char *cmd_path = malloc(sizeof(char*) * 1024);
-    	
+	char 	*path_copy =  strdup(cached_path);
+	char 	*dir = strtok(path_copy, ":");
+	char 	*cmd_path = malloc(sizeof(char*) * 1024);
+    	size_t 	size_tobe = 0;
 	memset((cmd_path), '\0', 1024);
 	
 	while (dir != NULL) {
         //strcpy(cmd_path, dir);
         //strcat(cmd_path, "/");
         //strcat(cmd_path, command);
-	snprintf(cmd_path, sizeof(cmd_path), "%s/%s", dir, command);
+
+	if (strcmp("/System/Cryptexes/App/usr/bin", dir)== 0 || strcmp("/System", dir) == 0){
+        dir = strtok(NULL, ":");
+	}
+	
+	printf("Current dir: %s\n", dir);
+	if (numArguments ==  0)
+		size_tobe = strlen(dir) + strlen(command) + 1;
+	else if (numArguments > 0)
+		size_tobe = strlen(dir) + strlen(command) + 2;
+		
+	printf("dir length: %zu, command length: %zu, needed size: %zu\n", strlen(dir), strlen(command), size_tobe);
+	snprintf(cmd_path, size_tobe, "%s/%s", dir, command);
 
         printf("Checking path: %s\n", cmd_path);
+	
+	//controlla se il path e' system o altre cartelle non accessibili
 
         if (access(cmd_path, X_OK) == 0) {
             printf("Command found: %s\n", cmd_path);
@@ -88,5 +110,8 @@ char	*init_cached_path(char **envp, char *cached_path)
 
 int	execute_single_cmd(char *cmd, char *options, char *arguments)
 {
+	
+	
+
 	return 1;	
 }

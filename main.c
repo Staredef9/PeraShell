@@ -9,6 +9,9 @@
 
 struct stat statbuf;
 
+historyTab *table;
+
+
 int main(int argc, char **argv, char **envp)
 {
 	if (stat("/usr/bin", &statbuf) != 0){
@@ -35,12 +38,16 @@ int main(int argc, char **argv, char **envp)
 			buffer[bytesRead] = '\0';
 			printf("You endered: %s\n", buffer);
 			
+			//qui inizializzata 
+			//ricordati di liberare appena chiudi 
+			p_history(table, buffer);			
 
 			//generalizza con unica funzione "check_cases"
 			//per pulire qua
 			if (strcmp(buffer, "exit\n") == 0){
 				should_run = 0;
 				printf("Program exited correctly\n");
+				///TODO: PULISCI TUTTA LA MEMORIA PRIMA DI USCIRE
 				break;
 			}
 			if(p_clear(buffer) == 1)
@@ -54,18 +61,57 @@ int main(int argc, char **argv, char **envp)
 		
 		cached_path = init_cached_path(envp, cached_path);
 		
-		char *cmd_path = find_cmd_in_path(prova->segments->cmd, cached_path);
+		char *cmd_path = find_cmd_in_path(prova->segments->cmd, cached_path, prova->segments->numArguments);
 		
-		//Buggerino over here ->se metto un non comando lo trova lo stesso.
-		
-		
-		if (cmd_path)
+		if (cmd_path){
 			printf("cmd exists at path: %s\n", cmd_path);
-		else
+			
+			//se tutto esiste, adesso e' il momento di creare un child e passare al child le cose 
+			//fare una pipe 
+			//aprire la comunicazione 
+			//ricevere output del child e assicurarsi che muoia. 
+			//printare output
+			
+			int id;
+			int fd[2];
+			int exitStatus;
+
+
+			//devo fare in modo di generalizzare questa cosa con una funzione di modo che qualsiasi comando possa essere inserito cosi dentro un char **
+			//poiche execve accetta le cosi in quel formato.
+			char *args[] = {prova->segments[0].cmd,prova->segments[0].options[0],prova->segments[0].arguments[0],NULL};
+
+
+
+
+
+			//Questo codice e' un sample di prova che funziona con un solo comando figlio.
+			//Qua in realta' devo creare una logica che gestisca molteplici PIPES e molteplici return di output di ognuno  dei figli di modo 
+			//che sia tutto molto malleabile. 
+			pipe(fd);
+			if (fd[0] == -1)
+				return(1);
+			id = fork();
+			if (id == -1)
+				return(4);
+			if (id == 0){
+				//figlio fa cose
+				execve(cmd_path,args, envp);
+				printf("execve failed");
+				exit(1);
+			} else {
+				waitpid(id, & exitStatus, 0);
+				if(WIFEXITED(exitStatus)){
+					int status = WEXITSTATUS(exitStatus);
+					printf("Child process exited with status %d\n", status);
+				}
+			}
+		} else
 			printf("%s It is not a valid cmd\n", prova->segments->cmd);
 		free_cached_path(cached_path);
 		free(cmd_path);
 		free_commandInfo(prova);
+		
 		}			
 
 	}

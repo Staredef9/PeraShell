@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
@@ -67,14 +68,22 @@ typedef struct parseInfo
 } parseInfo;
 
 
+typedef struct historyTab{
+	char **buffer;
+} historyTab;
+
+
+
 int		p_clear(char *buffer);
 int		deallocParseInfo(parseInfo *parse);
+int		p_histroy(historyTab *table, char *buffer);
 parseInfo 	*parse(char *buffer);
 CommandInfo	*parse_input(const char *input);
 void		free_commandInfo(CommandInfo *cmdInfo);
 void		print_cmd_info(CommandInfo *prova);
+void		free_hist_table(historyTab *table);
 char		*my_getenv(const char *name, char **envp);
-char		*find_cmd_in_path(const char *command, char *cached_path);
+char		*find_cmd_in_path(const char *command, char *cached_path, int numArguments);
 void		free_cached_path(char *cached_path);
 char		*init_cached_path(char **envp, char *cached_path);
 

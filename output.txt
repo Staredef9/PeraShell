@@ -1,0 +1,14 @@
+total 128
+drwxr-xr-x  13 federico  staff   416B Nov 17 23:26 .
+drwxr-xr-x  48 federico  staff   1.5K Nov 15 02:08 ..
+drwxr-xr-x  14 federico  staff   448B Nov 10 12:06 .git
+drwxr-xr-x   4 federico  staff   128B Nov 10 10:28 DEBUG
+-rw-r--r--   1 federico  staff    94B Oct 27 12:46 Makefile
+-rw-r--r--   1 federico  staff   1.5K Nov 15 17:25 PeraShell.h
+-rw-r--r--   1 federico  staff    53B Oct 27 12:47 README.md
+-rw-r--r--   1 federico  staff   566B Oct 27 12:46 builtins.c
+-rw-r--r--   1 federico  staff   2.7K Nov 15 17:30 executor.c
+-rw-r--r--   1 federico  staff   2.7K Nov 15 17:24 main.c
+-rw-r--r--   1 federico  staff     0B Nov 17 23:26 output.txt
+-rw-r--r--   1 federico  staff   3.8K Nov 10 17:35 parse.c
+-rwxr-xr-x   1 federico  staff    34K Nov 15 17:26 perashell
