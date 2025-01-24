@@ -73,10 +73,10 @@ typedef struct historyTab{
 } historyTab;
 
 
-
+void		print_hist_table(historyTab *table);
 int		p_clear(char *buffer);
 int		deallocParseInfo(parseInfo *parse);
-int		p_histroy(historyTab *table, char *buffer);
+int		p_history(historyTab *table, char *buffer, int *size, int *capacity);
 parseInfo 	*parse(char *buffer);
 CommandInfo	*parse_input(const char *input);
 void		free_commandInfo(CommandInfo *cmdInfo);

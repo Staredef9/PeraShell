@@ -84,6 +84,7 @@ char *find_cmd_in_path(const char *command, char *cached_path, int numArguments)
 	}*/
 	free(path_copy);
 	printf("cmd not found\n");
+	free(cmd_path);
 	return NULL;
 }
 

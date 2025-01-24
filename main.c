@@ -9,11 +9,19 @@
 
 struct stat statbuf;
 
-historyTab *table;
+
+int size = 0; 
+int capacity = 0;
 
 
 int main(int argc, char **argv, char **envp)
 {
+historyTab *table = malloc(sizeof(historyTab));
+
+if (!table) {
+    perror("Failed to allocate history table");
+    exit(1);
+}
 	if (stat("/usr/bin", &statbuf) != 0){
 		printf("/usr/bin does not exist\n");
 	}
@@ -40,7 +48,7 @@ int main(int argc, char **argv, char **envp)
 			
 			//qui inizializzata 
 			//ricordati di liberare appena chiudi 
-			p_history(table, buffer);			
+			p_history(table, buffer, &size, &capacity);			
 
 			//generalizza con unica funzione "check_cases"
 			//per pulire qua
@@ -52,7 +60,11 @@ int main(int argc, char **argv, char **envp)
 			}
 			if(p_clear(buffer) == 1)
 				continue;		
-		
+			if(strcmp(buffer, "history\n") == 0){
+				print_hist_table(table);
+		}
+
+
 			//..aggiungi altri casi 
 			//se tutto in linea normale, parsa il risultato ed esegui 
 		CommandInfo *prova = parse_input(buffer);
@@ -82,9 +94,6 @@ int main(int argc, char **argv, char **envp)
 			char *args[] = {prova->segments[0].cmd,prova->segments[0].options[0],prova->segments[0].arguments[0],NULL};
 
 
-
-
-
 			//Questo codice e' un sample di prova che funziona con un solo comando figlio.
 			//Qua in realta' devo creare una logica che gestisca molteplici PIPES e molteplici return di output di ognuno  dei figli di modo 
 			//che sia tutto molto malleabile. 
@@ -111,9 +120,10 @@ int main(int argc, char **argv, char **envp)
 		free_cached_path(cached_path);
 		free(cmd_path);
 		free_commandInfo(prova);
-		
+				
 		}			
-
+	
 	}
+		free_hist_table(table);
 		return 0;
 }
