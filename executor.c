@@ -109,10 +109,35 @@ char	*init_cached_path(char **envp, char *cached_path)
 
 
 
-int	execute_single_cmd(char *cmd, char *options, char *arguments)
+int	execute_single_cmd(char *cmd_path,char *options,char **envp,  char **arguments, int *id, int *fd, int *exitStatus)
 {
-	
-	
-
+	pipe(fd);
+			if (fd[0] == -1)
+				return(0);
+			*id = fork();
+			if (*id == -1)
+				return(2);
+			if (*id == 0){
+				//figlio fa cose
+				execve(cmd_path, arguments, envp);
+				printf("execve failed");
+				exit(1);
+			} else {
+				waitpid(*id, exitStatus, 0);
+				if(WIFEXITED(exitStatus)){
+					int status = WEXITSTATUS(*exitStatus);
+					printf("Child process exited with status %d\n", status);
+				}
+			}
 	return 1;	
 }
+
+//TODO:
+//crea e sostituisci nel main la gestione dgli argomenti del singolo comando, delle pipe multiple 
+//e dei redirect 
+//fare attenzione ai FREE
+//chiudere ASAP
+
+
+
+

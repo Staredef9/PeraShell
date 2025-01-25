@@ -73,19 +73,26 @@ typedef struct historyTab{
 } historyTab;
 
 
-void		print_hist_table(historyTab *table);
 int		p_clear(char *buffer);
 int		deallocParseInfo(parseInfo *parse);
 int		p_history(historyTab *table, char *buffer, int *size, int *capacity);
 parseInfo 	*parse(char *buffer);
 CommandInfo	*parse_input(const char *input);
+
+
 void		free_commandInfo(CommandInfo *cmdInfo);
 void		print_cmd_info(CommandInfo *prova);
+void		print_hist_table(historyTab *table);
 void		free_hist_table(historyTab *table);
+
+
+
+
 char		*my_getenv(const char *name, char **envp);
+
 char		*find_cmd_in_path(const char *command, char *cached_path, int numArguments);
 void		free_cached_path(char *cached_path);
 char		*init_cached_path(char **envp, char *cached_path);
 
-
+int	execute_single_cmd(char *cmd, char *options, char **envp, char **arguments, int *id, int *fd, int *exitStatus);
 #endif

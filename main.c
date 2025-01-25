@@ -67,6 +67,12 @@ if (!table) {
 
 			//..aggiungi altri casi 
 			//se tutto in linea normale, parsa il risultato ed esegui 
+
+	
+	
+	
+	
+	
 		CommandInfo *prova = parse_input(buffer);
 		
 		print_cmd_info(prova);
@@ -78,42 +84,19 @@ if (!table) {
 		if (cmd_path){
 			printf("cmd exists at path: %s\n", cmd_path);
 			
-			//se tutto esiste, adesso e' il momento di creare un child e passare al child le cose 
-			//fare una pipe 
-			//aprire la comunicazione 
-			//ricevere output del child e assicurarsi che muoia. 
-			//printare output
-			
 			int id;
 			int fd[2];
 			int exitStatus;
-
 
 			//devo fare in modo di generalizzare questa cosa con una funzione di modo che qualsiasi comando possa essere inserito cosi dentro un char **
 			//poiche execve accetta le cosi in quel formato.
 			char *args[] = {prova->segments[0].cmd,prova->segments[0].options[0],prova->segments[0].arguments[0],NULL};
 
 
-			//Questo codice e' un sample di prova che funziona con un solo comando figlio.
-			//Qua in realta' devo creare una logica che gestisca molteplici PIPES e molteplici return di output di ognuno  dei figli di modo 
-			//che sia tutto molto malleabile. 
-			pipe(fd);
-			if (fd[0] == -1)
-				return(1);
-			id = fork();
-			if (id == -1)
-				return(4);
-			if (id == 0){
-				//figlio fa cose
-				execve(cmd_path,args, envp);
-				printf("execve failed");
+			
+			if (execute_single_cmd(cmd_path, "null",envp, args, &id, fd, &exitStatus) != 1){
+				printf("Esecuzione fallita\n");	
 				exit(1);
-			} else {
-				waitpid(id, & exitStatus, 0);
-				if(WIFEXITED(exitStatus)){
-					int status = WEXITSTATUS(exitStatus);
-					printf("Child process exited with status %d\n", status);
-				}
 			}
 		} else
 			printf("%s It is not a valid cmd\n", prova->segments->cmd);
